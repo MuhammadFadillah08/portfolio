@@ -129,7 +129,7 @@ export default function Home() {
               </figure>
               <Seal
                 text="Web · API · AI · Otomasi · "
-                className="absolute top-6 right-0 h-24 w-24 sm:right-8 md:top-auto md:right-auto md:bottom-10 md:-left-10 md:h-32 md:w-32"
+                className="absolute top-4 right-0 h-24 w-24 sm:right-6 md:right-0 lg:h-28 lg:w-28"
               />
             </Reveal>
           </div>
@@ -210,7 +210,7 @@ export default function Home() {
               <ol className="mt-16 border-t border-line">
                 {principles.map((p, i) => (
                   <li key={p.title} className="border-b border-line">
-                    <Reveal delay={i * 80} className="grid gap-2 py-7 sm:grid-cols-[5rem_16rem_1fr] sm:gap-6">
+                    <Reveal delay={i * 80} className="grid gap-2 py-7 md:grid-cols-[4rem_14rem_1fr] md:gap-6">
                       <span className="font-mono text-xs text-gold">0{i + 1}</span>
                       <h3 className="text-lg font-medium">{p.title}</h3>
                       <p className="leading-relaxed text-muted">{p.body}</p>
@@ -333,7 +333,7 @@ export default function Home() {
         </section>
 
         {/* ================= KEAHLIAN ================= */}
-        <section className="border-t border-line bg-paper-2/50">
+        <section id="keahlian" className="border-t border-line bg-paper-2/50">
           <div className="mx-auto max-w-7xl px-5 py-24 sm:px-8 md:py-32">
             <Reveal>
               <Eyebrow index="05">Keahlian</Eyebrow>

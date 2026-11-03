@@ -9,6 +9,7 @@ const links = [
   { href: "#tentang", label: "Tentang" },
   { href: "#proyek", label: "Proyek" },
   { href: "#integrasi", label: "Integrasi API" },
+  { href: "#keahlian", label: "Keahlian" },
   { href: "#kontak", label: "Kontak" },
 ];
 
@@ -43,7 +44,7 @@ export function Header() {
             <Logo />
           </a>
 
-          <nav className="hidden items-center gap-9 text-[0.9rem] lg:flex">
+          <nav className="hidden items-center gap-7 text-[0.9rem] lg:flex xl:gap-9">
             {links.map((l) => (
               <a key={l.href} href={l.href}>
                 <span className="roll">
@@ -89,7 +90,7 @@ export function Header() {
       {/* Menu seluler layar penuh */}
       <div
         id="menu-seluler"
-        className={`fixed inset-0 z-40 flex flex-col bg-ink px-5 pt-28 pb-10 text-paper transition-[clip-path] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:px-8 lg:hidden ${
+        className={`fixed inset-0 z-40 flex flex-col overflow-y-auto bg-ink px-5 pt-24 pb-8 text-paper transition-[clip-path] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:px-8 lg:hidden ${
           open ? "[clip-path:inset(0_0_0_0)]" : "pointer-events-none [clip-path:inset(0_0_100%_0)]"
         }`}
         aria-hidden={!open}
@@ -102,7 +103,7 @@ export function Header() {
                   href={l.href}
                   tabIndex={open ? 0 : -1}
                   onClick={() => setOpen(false)}
-                  className="block py-4 font-serif text-[2.6rem] leading-none transition-colors hover:text-gold-soft"
+                  className="block py-[min(1rem,2vh)] font-serif text-[clamp(1.8rem,6.5vh,2.6rem)] leading-none transition-colors hover:text-gold-soft"
                 >
                   {l.label}
                 </a>
@@ -110,7 +111,7 @@ export function Header() {
             ))}
           </ul>
         </nav>
-        <div className="flex gap-3">
+        <div className="mt-8 flex gap-3">
           {socials.map((s) => (
             <a
               key={s.key}

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 
@@ -36,6 +36,11 @@ export const metadata: Metadata = {
     locale: "id_ID",
     type: "website",
   },
+};
+
+// Warna bilah alamat browser di HP mengikuti latar krem situs.
+export const viewport: Viewport = {
+  themeColor: "#f3eee5",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
