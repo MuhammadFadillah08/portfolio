@@ -122,10 +122,6 @@ export default function Home() {
                     className="object-cover object-[50%_18%] grayscale-[0.15] transition-transform duration-[1.6s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
                   />
                 </div>
-                <figcaption className="mx-auto mt-3 flex max-w-[26rem] justify-between font-mono text-[10px] tracking-[0.16em] text-muted uppercase md:mr-0">
-                  <span>Gbr. 01</span>
-                  <span>Muhammad Fadillah</span>
-                </figcaption>
               </figure>
               <Seal
                 text="Web · API · AI · Otomasi · "
