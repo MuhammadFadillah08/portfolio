@@ -1,26 +1,453 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --paper: #f3eee5;
+  --paper-2: #ebe4d7;
+  --card: #fbf8f2;
+  --ink: #13120f;
+  --ink-2: #2b2924;
+  --muted: #6d675c;
+  --line: #d8cfbf;
+  --gold: #9a7440;
+  --gold-soft: #e9dcc5;
+  --ok: #3d7a4c;
+
+  /* Permukaan kode */
+  --code: #161511;
+  --code-line: #2c2a24;
+  --code-text: #e7e0d2;
+  --code-dim: #8d8679;
+  --code-key: #d8b47c;
+  --code-str: #a7c495;
+  --code-num: #e4a27a;
+  --code-bool: #9cb8d9;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-ok: var(--ok);
+  --color-code: var(--code);
+  --color-code-line: var(--code-line);
+  --color-code-text: var(--code-text);
+  --color-code-dim: var(--code-dim);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-instrument-serif);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+/* Tekstur kertas tipis supaya latar tidak terasa datar/digital. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.22;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.4 0 0 0 0 0.35 0 0 0 0 0.28 0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--gold-soft);
+}
+
+:focus-visible {
+  outline: 1.5px solid var(--gold);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* ---------- Muncul saat di-scroll ---------- */
+/* Hanya disembunyikan bila JS aktif, jadi konten tetap terlihat tanpa JS. */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(32px);
+  transition:
+    opacity 1s var(--ease-out),
+    transform 1s var(--ease-out);
+  transition-delay: var(--delay, 0ms);
+}
+.js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Judul besar: baris naik dari balik "tirai". */
+.js .line-mask > span {
+  display: inline-block;
+  transform: translateY(105%);
+  transition: transform 1.2s var(--ease-out);
+  transition-delay: var(--delay, 0ms);
+}
+.js .is-visible .line-mask > span {
+  transform: none;
+}
+.line-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+
+/* Kelas komponen ditaruh di layer agar utilitas Tailwind (hidden, md:flex, dll.) tetap bisa menimpanya. */
+@layer components {
+  /* ---------- Tombol ---------- */
+  .btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    height: 3.25rem;
+    padding: 0 1.6rem;
+    border-radius: 999px;
+    font-size: 0.92rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    overflow: hidden;
+    isolation: isolate;
+    transition:
+      color 0.5s var(--ease-out),
+      border-color 0.5s var(--ease-out),
+      transform 0.25s var(--ease-out);
+  }
+  .btn::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    z-index: -1;
+    width: 140%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    transform: translate(-50%, 0) scale(0.2);
+    transition:
+      transform 0.7s var(--ease-out),
+      top 0.7s var(--ease-out);
+  }
+  .btn:hover::before {
+    top: -20%;
+    transform: translate(-50%, 0) scale(1);
+  }
+  .btn:active {
+    transform: scale(0.97);
+  }
+  .btn .btn-arrow {
+    transition: transform 0.5s var(--ease-out);
+  }
+  .btn:hover .btn-arrow {
+    transform: translateX(4px);
+  }
+  .btn:hover .btn-arrow-diag {
+    transform: translate(3px, -3px);
+  }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .btn-primary::before {
+    background: var(--gold);
+  }
+
+  .btn-outline {
+    border: 1px solid var(--ink);
+    color: var(--ink);
+  }
+  .btn-outline::before {
+    background: var(--ink);
+  }
+  .btn-outline:hover {
+    color: var(--paper);
+  }
+
+  .btn-light {
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .btn-light::before {
+    background: var(--gold-soft);
+  }
+
+  /* ---------- Tautan bergaris bawah ---------- */
+  .link-line {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 100% 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.6s var(--ease-out);
+  }
+  .link-line:hover {
+    background-size: 100% 1px;
+    background-position: 0 100%;
+  }
+
+  /* Teks bergulir ke atas saat hover (dipakai di nav). */
+  .roll {
+    display: inline-flex;
+    flex-direction: column;
+    height: 1.25em;
+    overflow: hidden;
+    line-height: 1.25em;
+  }
+  .roll > span {
+    transition: transform 0.55s var(--ease-out);
+  }
+  a:hover > .roll > span,
+  button:hover > .roll > span {
+    transform: translateY(-100%);
+  }
+
+  /* ---------- Label metode HTTP ---------- */
+  .method {
+    display: inline-flex;
+    align-items: center;
+    height: 1.35rem;
+    padding: 0 0.45rem;
+    border-radius: 4px;
+    font-family: var(--font-geist-mono), monospace;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+  .method-get {
+    background: rgb(61 122 76 / 0.16);
+    color: #7fbf8e;
+  }
+  .method-post {
+    background: rgb(216 180 124 / 0.16);
+    color: var(--code-key);
+  }
+
+  /* ---------- Kode / JSON ---------- */
+  .tok-key {
+    color: var(--code-key);
+  }
+  .tok-str {
+    color: var(--code-str);
+  }
+  .tok-num {
+    color: var(--code-num);
+  }
+  .tok-bool {
+    color: var(--code-bool);
+  }
+  .tok-punc {
+    color: var(--code-dim);
+  }
+
+  .code-line {
+    animation: code-in 0.5s var(--ease-out) both;
+    animation-delay: var(--i, 0ms);
+  }
+
+  .caret {
+    display: inline-block;
+    width: 0.55em;
+    height: 1.05em;
+    margin-left: 2px;
+    vertical-align: -0.15em;
+    background: var(--code-key);
+    animation: blink 1s steps(1) infinite;
+  }
+
+  /* ---------- Titik status berdenyut ---------- */
+  .pulse-dot {
+    position: relative;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 999px;
+    background: var(--ok);
+  }
+  .pulse-dot::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: inherit;
+    animation: pulse 2.2s var(--ease-out) infinite;
+  }
+
+  /* ---------- Marquee integrasi ---------- */
+  .marquee {
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 45s linear infinite;
+  }
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+
+  /* ---------- Proyek ---------- */
+  .project-shot img {
+    transition: transform 1.4s var(--ease-out);
+  }
+  .project-shot:hover img {
+    transform: scale(1.035);
+  }
+
+  /* ---------- Baris tabel/daftar yang hidup saat hover ---------- */
+  .row-hover {
+    position: relative;
+    isolation: isolate;
+  }
+  .row-hover::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--card);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.6s var(--ease-out);
+  }
+  .row-hover:hover::before {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  .row-hover .row-arrow {
+    opacity: 0;
+    transform: translateX(-8px);
+    transition:
+      opacity 0.5s var(--ease-out),
+      transform 0.5s var(--ease-out);
+  }
+  .row-hover:hover .row-arrow {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- Logo FD ---------- */
+.logo {
+  --logo-bg: var(--paper);
+}
+.logo-invert {
+  --logo-bg: var(--ink);
+}
+.logo-mark {
+  transition: scale 0.6s var(--ease-out);
+}
+.logo-outer,
+.logo-inner {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: logo-draw 1s var(--ease-out) forwards;
+}
+/* 1) garis tinta tergambar, 2) bagian tengahnya "dipahat" menjadi rongga. */
+.logo-outer {
+  stroke: currentColor;
+  animation-delay: calc(var(--i) * 220ms + 150ms);
+}
+.logo-inner {
+  stroke: var(--logo-bg);
+  animation-delay: calc(var(--i) * 220ms + 800ms);
+}
+/* 3) cahaya emas mengalir sekali di dalam pipa, lalu berulang saat disorot. */
+.logo-flow {
+  stroke: var(--gold);
+  stroke-dasharray: 0.16 1;
+  stroke-dashoffset: 0.16;
+  animation: logo-flow 1.3s ease-in-out calc(var(--i) * 180ms + 1.7s);
+}
+.logo-text > span {
+  animation: logo-text-in 0.8s var(--ease-out) 0.3s both;
+}
+.logo-text > span + span {
+  animation-delay: 0.42s;
+}
+
+.logo:hover .logo-mark {
+  scale: 1.06;
+}
+.logo:hover .logo-flow {
+  animation: logo-flow 1.5s ease-in-out calc(var(--i) * 200ms) infinite;
+}
+
+@keyframes logo-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes logo-flow {
+  from {
+    stroke-dashoffset: 0.16;
+  }
+  to {
+    stroke-dashoffset: -1;
+  }
+}
+@keyframes logo-text-in {
+  from {
+    opacity: 0;
+    translate: -6px 0;
+  }
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  to {
+    transform: scale(3.2);
+    opacity: 0;
+  }
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes code-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .js [data-reveal],
+  .js .line-mask > span {
+    opacity: 1;
+    transform: none;
+  }
 }
